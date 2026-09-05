@@ -23,22 +23,33 @@ public class MainActivity extends Activity {
             String user = username.getText().toString().trim();
             String pass = password.getText().toString().trim();
 
-            if (user.isEmpty() || pass.isEmpty()) {
-
-                Toast.makeText(
-                        this,
-                        "Username dan password wajib diisi",
-                        Toast.LENGTH_SHORT
-                ).show();
-
-            } else {
-
-                Toast.makeText(
-                        this,
-                        "Login berhasil",
-                        Toast.LENGTH_SHORT
-                ).show();
+            if (user.isEmpty()) {
+                username.setError("Username belum diisi");
+                username.requestFocus();
+                return;
             }
+
+            if (pass.isEmpty()) {
+                password.setError("Password belum diisi");
+                password.requestFocus();
+                return;
+            }
+
+            Toast.makeText(
+                    MainActivity.this,
+                    "Login berhasil",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            showHome();
         });
+    }
+
+    private void showHome() {
+        Toast.makeText(
+                this,
+                "ZAYNIX HOME",
+                Toast.LENGTH_SHORT
+        ).show();
     }
 }
