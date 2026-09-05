@@ -927,4 +927,55 @@ public class MainActivity extends Activity {
         addSpace(root, 25);
 
         root.addView(
+                            card(
+                        "📁 CONFIG",
+                        "Local configuration folder"
+                )
+        );
+
+        root.addView(
+                card(
+                        "📁 PRESETS",
+                        "Local preset folder"
+                )
+        );
+
+        root.addView(
+                card(
+                        "📄 settings.json",
+                        "Local settings file"
+                )
+        );
+
+        root.addView(
+                card(
+                        "📄 profile.znx",
+                        "Local profile file"
+                )
+        );
+
+        addSpace(root, 20);
+
+        root.addView(
+                label(
+                        "ZAYNIX FILES • LOCAL ONLY",
+                        13,
+                        GRAY
+                )
+        );
+
+        addSpace(root, 25);
+
+        Button back =
+                button("←  BACK TO HOME");
+
+        root.addView(back);
+
+        back.setOnClickListener(
+                v -> showHome()
+        );
+
+        setContentView(scroll);
+    }
+}
             
