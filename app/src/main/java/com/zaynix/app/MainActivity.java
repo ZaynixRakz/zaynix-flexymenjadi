@@ -131,10 +131,10 @@ public class MainActivity extends Activity {
         return b;
     }
 
-    private TextView card(
-            String title,
-            String description
-    ) {
+    private LinearLayout card(
+        String title,
+        String description
+) {
 
         LinearLayout box =
                 new LinearLayout(this);
