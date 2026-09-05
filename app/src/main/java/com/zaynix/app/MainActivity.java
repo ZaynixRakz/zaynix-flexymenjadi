@@ -4,173 +4,295 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 public class MainActivity extends Activity {
 
     private LinearLayout root;
+    private final Handler handler = new Handler();
+
+    private final int BG = Color.rgb(8, 8, 11);
+    private final int CARD = Color.rgb(20, 19, 24);
+    private final int CARD2 = Color.rgb(25, 24, 31);
+    private final int GREEN = Color.rgb(124, 255, 124);
+    private final int WHITE = Color.WHITE;
+    private final int GRAY = Color.rgb(145, 145, 152);
+    private final int DARK = Color.rgb(12, 12, 15);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Window w = getWindow();
+        w.setStatusBarColor(BG);
+        w.setNavigationBarColor(BG);
+
         showLogin();
     }
 
-    private TextView text(String value, float size, int color) {
+    private int dp(int v) {
+        return (int)(v * getResources()
+                .getDisplayMetrics().density + 0.5f);
+    }
+
+    private GradientDrawable bg(
+            int color,
+            int radius,
+            int strokeColor,
+            int stroke
+    ) {
+        GradientDrawable g = new GradientDrawable();
+        g.setColor(color);
+        g.setCornerRadius(dp(radius));
+
+        if (stroke > 0) {
+            g.setStroke(dp(stroke), strokeColor);
+        }
+
+        return g;
+    }
+
+    private TextView label(
+            String text,
+            float size,
+            int color
+    ) {
         TextView t = new TextView(this);
-        t.setText(value);
+        t.setText(text);
         t.setTextSize(size);
         t.setTextColor(color);
         t.setGravity(Gravity.CENTER);
-        t.setPadding(12, 12, 12, 12);
+        t.setIncludeFontPadding(true);
         return t;
     }
 
-    private Button menuButton(String title) {
+    private void addSpace(
+            LinearLayout layout,
+            int height
+    ) {
+        View v = new View(this);
+
+        layout.addView(
+                v,
+                new LinearLayout.LayoutParams(
+                        1,
+                        dp(height)
+                )
+        );
+    }
+
+    private Button button(String title) {
+
         Button b = new Button(this);
+
         b.setText(title);
         b.setTextSize(15);
         b.setTextColor(Color.BLACK);
+        b.setGravity(Gravity.CENTER);
         b.setAllCaps(false);
-        b.setBackgroundColor(Color.rgb(124, 255, 124));
+        b.setPadding(
+                dp(12),
+                0,
+                dp(12),
+                0
+        );
+
+        b.setBackground(
+                bg(GREEN, 14, GREEN, 0)
+        );
 
         LinearLayout.LayoutParams p =
                 new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        60
+                        -1,
+                        dp(58)
                 );
 
-        p.setMargins(0, 12, 0, 12);
+        p.setMargins(
+                0,
+                dp(7),
+                0,
+                dp(7)
+        );
+
         b.setLayoutParams(p);
 
         return b;
     }
 
-    private void showLogin() {
+    private TextView card(
+            String title,
+            String description
+    ) {
 
-        root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setGravity(Gravity.CENTER_HORIZONTAL);
-        root.setPadding(42, 55, 42, 30);
-        root.setBackgroundColor(Color.rgb(9, 9, 11));
+        LinearLayout box =
+                new LinearLayout(this);
 
-        ScrollHelper(root);
+        box.setOrientation(
+                LinearLayout.VERTICAL
+        );
 
-        TextView title = text("ZAYNIX", 38, Color.WHITE);
-        title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        box.setPadding(
+                dp(18),
+                dp(16),
+                dp(18),
+                dp(16)
+        );
 
-        root.addView(title);
+        box.setBackground(
+                bg(CARD, 18, Color.rgb(42, 41, 48), 1)
+        );
 
-        TextView sub = text("FREE INJECTOR", 25,
-                Color.rgb(124, 255, 124));
-        sub.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        root.addView(sub);
+        TextView a =
+                label(title, 19, WHITE);
 
-        root.addView(text("VERSION 5.0", 18,
-                Color.rgb(145, 145, 150)));
+        a.setGravity(Gravity.LEFT);
+        a.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
 
-        addSpace(45);
+        box.addView(a);
 
-        EditText username = new EditText(this);
-        username.setHint("Username");
-        username.setTextColor(Color.WHITE);
-        username.setHintTextColor(Color.GRAY);
-        username.setSingleLine(true);
-        username.setText("zaynix");
+        addSpace(box, 6);
 
-        root.addView(username,
+        TextView c =
+                label(description, 14, GRAY);
+
+        c.setGravity(Gravity.LEFT);
+
+        box.addView(c);
+
+        LinearLayout.LayoutParams p =
                 new LinearLayout.LayoutParams(
-                        -1, 65));
+                        -1,
+                        -2
+                );
 
-        addSpace(12);
-
-        EditText password = new EditText(this);
-        password.setHint("Password");
-        password.setTextColor(Color.WHITE);
-        password.setHintTextColor(Color.GRAY);
-        password.setSingleLine(true);
-        password.setInputType(
-                android.text.InputType.TYPE_CLASS_TEXT |
-                android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+        p.setMargins(
+                0,
+                dp(8),
+                0,
+                dp(8)
         );
 
-        root.addView(password,
-                new LinearLayout.LayoutParams(
-                        -1, 65));
+        box.setLayoutParams(p);
 
-        addSpace(20);
-
-        Button login = menuButton("LOGIN");
-        root.addView(login);
-
-        login.setOnClickListener(v -> {
-
-            String user =
-                    username.getText().toString().trim();
-
-            String pass =
-                    password.getText().toString().trim();
-
-            if (user.isEmpty()) {
-                username.setError("Username belum diisi");
-                return;
-            }
-
-            if (pass.isEmpty()) {
-                password.setError("Password belum diisi");
-                return;
-            }
-
-            Toast.makeText(
-                    MainActivity.this,
-                    "Login berhasil",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            showHome();
-        });
-
-        addSpace(15);
-
-        TextView getPass =
-                text("GET USER/PASS", 18,
-                        Color.rgb(124, 255, 124));
-
-        root.addView(getPass);
-
-        addSpace(55);
-
-        root.addView(
-                text("Social Media Zaynix", 18,
-                        Color.rgb(145, 145, 150))
-        );
-
-        addSpace(40);
-
-        root.addView(
-                text("©2026 ZAYNIX. All rights reserved.",
-                        14,
-                        Color.rgb(90, 90, 95))
-        );
-
-        setContentView(root);
+        return box;
     }
 
-    private void showHome() {
+    private EditText input(
+            String hint
+    ) {
 
-        root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28, 35, 28, 25);
-        root.setBackgroundColor(Color.rgb(9, 9, 11));
+        EditText e =
+                new EditText(this);
+
+        e.setHint(hint);
+        e.setHintTextColor(
+                Color.rgb(115, 115, 122)
+        );
+
+        e.setTextColor(WHITE);
+        e.setTextSize(17);
+        e.setSingleLine(true);
+
+        e.setPadding(
+                dp(17),
+                0,
+                dp(17),
+                0
+        );
+
+        e.setBackground(
+                bg(DARK, 12,
+                        Color.rgb(50, 50, 57), 1)
+        );
+
+        e.setLayoutParams(
+                new LinearLayout.LayoutParams(
+                        -1,
+                        dp(60)
+                )
+        );
+
+        return e;
+    }
+
+    private ScrollView page() {
+
+        ScrollView scroll =
+                new ScrollView(this);
+
+        scroll.setFillViewport(true);
+        scroll.setBackgroundColor(BG);
+
+        root =
+                new LinearLayout(this);
+
+        root.setOrientation(
+                LinearLayout.VERTICAL
+        );
+
+        root.setPadding(
+                dp(20),
+                dp(24),
+                dp(20),
+                dp(30)
+        );
+
+        root.setBackgroundColor(BG);
+
+        scroll.addView(root);
+
+        return scroll;
+    }
+
+    private void header(
+            String title,
+            String subtitle
+    ) {
+
+        TextView t =
+                label(title, 31, WHITE);
+
+        t.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        root.addView(t);
+
+        addSpace(root, 3);
+
+        root.addView(
+                label(subtitle, 16, GREEN)
+        );
+    }
+
+    // =========================
+    // LOGIN
+    // =========================
+
+    private void showLogin() {
+
+        ScrollView scroll = page();
+
+        addSpace(root, 18);
 
         TextView title =
-                text("ZAYNIX", 32, Color.WHITE);
+                label("ZAYNIX", 40, WHITE);
 
         title.setTypeface(
                 Typeface.DEFAULT,
@@ -179,225 +301,630 @@ public class MainActivity extends Activity {
 
         root.addView(title);
 
-        root.addView(
-                text("FREE VERSION • TOOLS V5.0",
-                        15,
-                        Color.rgb(124, 255, 124))
-        );
+        addSpace(root, 5);
 
-        addSpace(25);
+        TextView sub =
+                label("FREE INJECTOR", 27, GREEN);
 
-        TextView status =
-                text("SYSTEM READY", 20,
-                        Color.rgb(124, 255, 124));
-
-        status.setTypeface(
+        sub.setTypeface(
                 Typeface.DEFAULT,
                 Typeface.BOLD
         );
 
-        root.addView(status);
-
-        addSpace(20);
+        root.addView(sub);
 
         root.addView(
-                text("ZAYNIX CONTROL PANEL",
-                        18,
-                        Color.WHITE)
+                label("VERSION 5.0", 18, GRAY)
         );
 
-        Button feature =
-                menuButton("⚙  FEATURES");
+        addSpace(root, 42);
 
-        root.addView(feature);
+        LinearLayout box =
+                new LinearLayout(this);
 
-        feature.setOnClickListener(v ->
-                showFeature()
+        box.setOrientation(
+                LinearLayout.VERTICAL
+        );
+
+        box.setPadding(
+                dp(18),
+                dp(20),
+                dp(18),
+                dp(20)
+        );
+
+        box.setBackground(
+                bg(CARD, 4,
+                        Color.rgb(25, 24, 29), 1)
+        );
+
+        TextView uLabel =
+                label("Username", 17, WHITE);
+
+        uLabel.setGravity(Gravity.LEFT);
+
+        box.addView(uLabel);
+
+        addSpace(box, 8);
+
+        EditText username =
+                input("Username");
+
+        username.setText("zaynix");
+
+        box.addView(username);
+
+        addSpace(box, 18);
+
+        TextView pLabel =
+                label("Password", 17, WHITE);
+
+        pLabel.setGravity(Gravity.LEFT);
+
+        box.addView(pLabel);
+
+        addSpace(box, 8);
+
+        EditText password =
+                input("Password");
+
+        password.setInputType(
+                android.text.InputType.TYPE_CLASS_TEXT |
+                android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+        );
+
+        box.addView(password);
+
+        addSpace(box, 22);
+
+        Button login =
+                button("LOGIN");
+
+        box.addView(login);
+
+        addSpace(box, 12);
+
+        TextView get =
+                label(
+                        "GET USER/PASS",
+                        17,
+                        GREEN
+                );
+
+        box.addView(get);
+
+        root.addView(box);
+
+        login.setOnClickListener(v -> {
+
+            String user =
+                    username.getText()
+                            .toString()
+                            .trim();
+
+            String pass =
+                    password.getText()
+                            .toString()
+                            .trim();
+
+            if (user.length() == 0) {
+                username.setError(
+                        "Username belum diisi"
+                );
+                return;
+            }
+
+            if (pass.length() == 0) {
+                password.setError(
+                        "Password belum diisi"
+                );
+                return;
+            }
+
+            Toast.makeText(
+                    this,
+                    "Login berhasil",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            handler.postDelayed(
+                    () -> showHome(),
+                    250
+            );
+        });
+
+        addSpace(root, 45);
+
+        root.addView(
+                label(
+                        "Social Media Zaynix",
+                        18,
+                        GRAY
+                )
+        );
+
+        addSpace(root, 40);
+
+        root.addView(
+                label(
+                        "©2026 ZAYNIX. All rights reserved.",
+                        14,
+                        Color.rgb(85, 85, 91)
+                )
+        );
+
+        setContentView(scroll);
+    }
+
+    // =========================
+    // HOME
+    // =========================
+
+    private void showHome() {
+
+        ScrollView scroll = page();
+
+        header(
+                "ZAYNIX",
+                "FREE VERSION • TOOLS V5.0"
+        );
+
+        addSpace(root, 22);
+
+        TextView ready =
+                label(
+                        "SYSTEM READY",
+                        23,
+                        GREEN
+                );
+
+        ready.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        root.addView(ready);
+
+        addSpace(root, 6);
+
+        root.addView(
+                label(
+                        "ZAYNIX CONTROL PANEL",
+                        20,
+                        WHITE
+                )
+        );
+
+        addSpace(root, 18);
+
+        LinearLayout game =
+                new LinearLayout(this);
+
+        game.setOrientation(
+                LinearLayout.HORIZONTAL
+        );
+
+        game.setPadding(
+                dp(16),
+                dp(14),
+                dp(16),
+                dp(14)
+        );
+
+        game.setGravity(
+                Gravity.CENTER_VERTICAL
+        );
+
+        game.setBackground(
+                bg(CARD, 16,
+                        Color.rgb(45, 44, 52), 1)
+        );
+
+        TextView gameName =
+                label(
+                        "FREE FIRE",
+                        18,
+                        WHITE
+                );
+
+        gameName.setGravity(Gravity.LEFT);
+
+        gameName.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        game.addView(
+                gameName,
+                new LinearLayout.LayoutParams(
+                        0,
+                        -2,
+                        1
+                )
+        );
+
+        TextView installed =
+                label(
+                        "READY",
+                        13,
+                        GREEN
+                );
+
+        game.addView(installed);
+
+        root.addView(game);
+
+        addSpace(root, 15);
+
+        root.addView(
+                card(
+                        "AIM FEATURES",
+                        "Local interface for ZAYNIX tools"
+                )
+        );
+
+        root.addView(
+                card(
+                        "HOLOGRAM",
+                        "Visual settings and local controls"
+                )
+        );
+
+        addSpace(root, 12);
+
+        Button features =
+                button("⚙  FEATURES");
+
+        root.addView(features);
+
+        features.setOnClickListener(
+                v -> showFeature()
         );
 
         Button terminal =
-                menuButton("⌘  TERMINAL DEMO");
+                button("⌘  TERMINAL");
 
         root.addView(terminal);
 
-        terminal.setOnClickListener(v ->
-                showTerminal()
+        terminal.setOnClickListener(
+                v -> showTerminal()
         );
 
         Button files =
-                menuButton("▣  ZAYNIX FILES");
+                button("▣  ZAYNIX FILES");
 
         root.addView(files);
 
-        files.setOnClickListener(v ->
-                showFiles()
+        files.setOnClickListener(
+                v -> showFiles()
         );
 
-        addSpace(25);
+        addSpace(root, 20);
 
-        TextView info =
-                text(
-                        "Local interface • Demo mode\nNo external server required",
+        root.addView(
+                label(
+                        "Local interface • Demo mode\n" +
+                        "No external server required",
                         14,
-                        Color.rgb(130, 130, 135)
-                );
+                        GRAY
+                )
+        );
 
-        root.addView(info);
-
-        addSpace(30);
+        addSpace(root, 20);
 
         Button logout =
-                menuButton("← LOGOUT");
+                button("←  LOGOUT");
 
         root.addView(logout);
 
-        logout.setOnClickListener(v ->
-                showLogin()
+        logout.setOnClickListener(
+                v -> showLogin()
         );
 
-        setContentView(root);
+        setContentView(scroll);
     }
+
+    // =========================
+    // FEATURES
+    // =========================
 
     private void showFeature() {
 
-        root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28, 35, 28, 25);
-        root.setBackgroundColor(Color.rgb(9, 9, 11));
+        ScrollView scroll = page();
 
-        root.addView(
-                text("ZAYNIX FEATURES",
-                        28, Color.WHITE)
+        header(
+                "ZAYNIX FEATURES",
+                "FreeVersion • Tools V5.0"
         );
 
-        addSpace(25);
+        addSpace(root, 25);
 
         root.addView(
-                text("FEATURE PANEL",
-                        20,
-                        Color.rgb(124, 255, 124))
-        );
-
-        addSpace(15);
-
-        root.addView(
-                text(
-                        "DRAG HS 32%\n\nHEADTRICK\n\nGRAFIK MINECRAFT\n\nHOLOGRAM",
-                        18,
-                        Color.WHITE
+                card(
+                        "DRAG HS 32%",
+                        "Local visual preset"
                 )
         );
 
-        addSpace(30);
+        root.addView(
+                card(
+                        "HEADTRICK",
+                        "Local feature interface"
+                )
+        );
+
+        root.addView(
+                card(
+                        "GRAFIK MINECRAFT",
+                        "Visual graphics preset"
+                )
+        );
+
+        root.addView(
+                card(
+                        "SMOOTH TOUCH",
+                        "Local UI setting"
+                )
+        );
+
+        addSpace(root, 15);
+
+        TextView holo =
+                label(
+                        "HOLOGRAM",
+                        21,
+                        GREEN
+                );
+
+        holo.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        root.addView(holo);
+
+        addSpace(root, 10);
+
+        root.addView(
+                card(
+                        "HAPUS HOLOGRAM",
+                        "Visual demo control"
+                )
+        );
+
+        addSpace(root, 15);
+
+        Button demo =
+                button("RUN DEMO");
+
+        root.addView(demo);
+
+        demo.setOnClickListener(
+                v -> showProgress()
+        );
+
+        addSpace(root, 10);
 
         Button back =
-                menuButton("← BACK TO HOME");
+                button("←  BACK TO HOME");
 
         root.addView(back);
 
-        back.setOnClickListener(v ->
-                showHome()
+        back.setOnClickListener(
+                v -> showHome()
         );
 
-        setContentView(root);
+        setContentView(scroll);
     }
+
+    // =========================
+    // PROGRESS DEMO
+    // =========================
+
+    private void showProgress() {
+
+        ScrollView scroll = page();
+
+        header(
+                "ZAYNIX",
+                "PROCESS DEMO"
+        );
+
+        addSpace(root, 35);
+
+        TextView title =
+                label(
+                        "Injected Library",
+                        25,
+                        WHITE
+                );
+
+        title.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        root.addView(title);
+
+        addSpace(root, 20);
+
+        TextView percent =
+                label(
+                        "0%",
+                        42,
+                        GREEN
+                );
+
+        percent.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        root.addView(percent);
+
+        addSpace(root, 20);
+
+        ProgressBar progress =
+                new ProgressBar(
+                        this,
+                        null,
+                        android.R.attr.progressBarStyleHorizontal
+                );
+
+        progress.setMax(100);
+        progress.setProgress(0);
+
+        root.addView(
+                progress,
+                new LinearLayout.LayoutParams(
+                        -1,
+                        dp(10)
+                )
+        );
+
+        addSpace(root, 20);
+
+        root.addView(
+                label(
+                        "Running local interface demo...\n" +
+                        "No game modification is performed.",
+                        15,
+                        GRAY
+                )
+        );
+
+        setContentView(scroll);
+
+        final int[] value = {0};
+
+        Runnable run =
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        value[0] += 4;
+
+                        if (value[0] > 100)
+                            value[0] = 100;
+
+                        progress.setProgress(
+                                value[0]
+                        );
+
+                        percent.setText(
+                                value[0] + "%"
+                        );
+
+                        if (value[0] < 100) {
+
+                            handler.postDelayed(
+                                    this,
+                                    80
+                            );
+
+                        } else {
+
+                            handler.postDelayed(
+                                    () -> showFeature(),
+                                    700
+                            );
+                        }
+                    }
+                };
+
+        handler.post(run);
+    }
+
+    // =========================
+    // TERMINAL
+    // =========================
 
     private void showTerminal() {
 
-        root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(25, 35, 25, 25);
-        root.setBackgroundColor(Color.rgb(5, 5, 7));
+        ScrollView scroll = page();
 
-        root.addView(
-                text("ZAYNIX TERMINAL",
-                        28,
-                        Color.WHITE)
+        header(
+                "ZAYNIX TERMINAL",
+                "System Demo V5.0"
         );
 
-        addSpace(20);
+        addSpace(root, 25);
 
-        root.addView(
-                text(
-                        "WELCOME TO ZAYNIX TERMINAL\n\n" +
-                        "System Demo v5.0\n\n" +
-                        "root@zaynix:~$ ./start\n" +
-                        "root@zaynix:~$ status\n" +
-                        "System ready.\n\n" +
-                        "root@zaynix:~$ _",
-                        15,
-                        Color.rgb(124, 255, 124)
+        LinearLayout terminal =
+                new LinearLayout(this);
+
+        terminal.setOrientation(
+                LinearLayout.VERTICAL
+        );
+
+        terminal.setPadding(
+                dp(18),
+                dp(18),
+                dp(18),
+                dp(18)
+        );
+
+        terminal.setBackground(
+                bg(
+                        Color.rgb(3, 3, 5),
+                        14,
+                        Color.rgb(45, 45, 50),
+                        1
                 )
         );
 
-        addSpace(30);
+        TextView output =
+                label(
+                        "WELCOME TO ZAYNIX TERMINAL\n\n" +
+                        "System Injector v5.0\n\n" +
+                        "root@zaynix:~$ ./start\n" +
+                        "root@zaynix:~$ status\n\n" +
+                        "SYSTEM READY\n\n" +
+                        "root@zaynix:~$ help\n" +
+                        "./start\n" +
+                        "./install\n" +
+                        "./delete\n" +
+                        "help\n\n" +
+                        "root@zaynix:~$ _",
+                        14,
+                        GREEN
+                );
+
+        output.setGravity(Gravity.LEFT);
+
+        terminal.addView(output);
+
+        root.addView(terminal);
+
+        addSpace(root, 25);
 
         Button back =
-                menuButton("← BACK TO HOME");
+                button("←  BACK TO HOME");
 
         root.addView(back);
 
-        back.setOnClickListener(v ->
-                showHome()
+        back.setOnClickListener(
+                v -> showHome()
         );
 
-        setContentView(root);
+        setContentView(scroll);
     }
+
+    // =========================
+    // FILES
+    // =========================
 
     private void showFiles() {
 
-        root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28, 35, 28, 25);
-        root.setBackgroundColor(Color.rgb(9, 9, 11));
+        ScrollView scroll = page();
+
+        header(
+                "ZAYNIX FILES",
+                "Local File Explorer"
+        );
+
+        addSpace(root, 25);
 
         root.addView(
-                text("ZAYNIX FILES",
-                        28,
-                        Color.WHITE)
-        );
-
-        addSpace(25);
-
-        root.addView(
-                text(
-                        "LOCAL FILE MANAGER\n\n" +
-                        "📁 Config\n" +
-                        "📁 Presets\n" +
-                        "📄 settings.json\n" +
-                        "📄 profile.znx",
-                        17,
-                        Color.WHITE
-                )
-        );
-
-        addSpace(30);
-
-        Button back =
-                menuButton("← BACK TO HOME");
-
-        root.addView(back);
-
-        back.setOnClickListener(v ->
-                showHome()
-        );
-
-        setContentView(root);
-    }
-
-    private void addSpace(int height) {
-
-        View space = new View(this);
-
-        root.addView(
-                space,
-                new LinearLayout.LayoutParams(
-                        1, height
-                )
-        );
-    }
-
-    private void ScrollHelper(LinearLayout layout) {
-        // Placeholder supaya layout tetap sederhana.
-    }
-}
+            
