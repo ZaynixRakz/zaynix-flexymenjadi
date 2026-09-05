@@ -8,7 +8,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.zaynix.app"
+        applicationId 'com.zaynix.app'
         minSdk 23
         targetSdk 35
 
